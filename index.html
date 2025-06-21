@@ -196,23 +196,35 @@
         URL.revokeObjectURL(a.href);
       }, 'image/png');
     }
-
     function uploadToSheets() {
-    	if (stamps.length === 0) {
-      	alert("먼저 도장을 생성해주세요.");
-      	return;
-    	}
+  	if (stamps.length === 0) {
+    	  alert("먼저 도장을 생성해주세요.");
+    	  return;
+  	}
 
-    	// 가장 최근 도장(canvas)를 선택
-    	const canvasList = document.querySelectorAll("canvas");
-    	const latestCanvas = canvasList[canvasList.length - 1];
+  	const canvasList = document.querySelectorAll("canvas");
+  	if (canvasList.length === 0) {
+    	  alert("도장을 먼저 추가해주세요.");
+    	  return;
+  	}
 
-    	const dataURL = latestCanvas.toDataURL("image/png");
+  	const latestCanvas = canvasList[canvasList.length - 1];
+  	if (!latestCanvas) {
+    	  alert("도장을 찾을 수 없습니다.");
+    	  return;
+  	}
 
-    	google.script.run
-	  .withSuccessHandler(() => alert("가장 최근 도장이 업로드 및 삽입되었습니다."))
-      	  .uploadStampToDrive(dataURL);
-    }
+  	const dataURL = latestCanvas.toDataURL("image/png");
+
+  	if (!dataURL) {
+    	  alert("도장 이미지 데이터를 가져오지 못했습니다.");
+    	  return;
+  	}
+
+  	google.script.run
+    	  .withSuccessHandler(() => alert("가장 최근 도장이 업로드 및 삽입되었습니다."))
+    	  .uploadStampToDrive(dataURL);
+	}
   </script>
 </body>
 </html>
