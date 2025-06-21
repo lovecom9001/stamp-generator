@@ -52,6 +52,7 @@
       cursor: pointer;
     }
     .download-btn { background: #28a745; color: white; }
+    .upload-btn { background: #007bff; color: white; }
     .clear-btn { background: #dc3545; color: white; }
     .size-btn { background: #17a2b8; color: white; }
     .stamps-container { display: flex; flex-wrap: wrap; gap: 20px; }
@@ -195,13 +196,18 @@
         URL.revokeObjectURL(a.href);
       }, 'image/png');
     }
-    function uploadStamp() {
-      const canvas = document.querySelector('canvas');
-      const dataURL = canvas.toDataURL('image/png');
+    function uploadToSheets() {
+      if (stamps.length === 0) {
+        alert("먼저 도장을 생성해주세요.");
+        return;
+      }
 
-      google.script.run.withSuccessHandler(() => {
-        alert("도장이 업로드되고 자동 삽입되었습니다.");
-      }).uploadStampToDrive(dataURL);
+      const canvas = document.querySelector("canvas");
+      const dataURL = canvas.toDataURL("image/png");
+
+      google.script.run
+        .withSuccessHandler(() => alert("도장이 업로드 및 삽입되었습니다."))
+        .uploadStampToDrive(dataURL);
     }
   </script>
 </body>
