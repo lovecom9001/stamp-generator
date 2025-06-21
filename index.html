@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>엑센테크닉 품질 도장 생성기</title>
+  <title>출하검사 도장 생성기</title>
   <style>
     body {
       font-family: 'Malgun Gothic', sans-serif;
@@ -105,7 +105,7 @@
     <div class="controls">
       <input id="dateInput" type="date" />
       <button onclick="addStamp()">도장 추가</button>
-      <button onclick="uploadStamp()">업로드</button>
+      <button onclick="uploadToSheets()">업로드</button>
     </div>
     <div class="stamps-container" id="stampsList"></div>
   </div>
@@ -196,18 +196,22 @@
         URL.revokeObjectURL(a.href);
       }, 'image/png');
     }
+
     function uploadToSheets() {
-      if (stamps.length === 0) {
-        alert("먼저 도장을 생성해주세요.");
-        return;
-      }
+    	if (stamps.length === 0) {
+      	alert("먼저 도장을 생성해주세요.");
+      	return;
+    	}
 
-      const canvas = document.querySelector("canvas");
-      const dataURL = canvas.toDataURL("image/png");
+    	// 가장 최근 도장(canvas)를 선택
+    	const canvasList = document.querySelectorAll("canvas");
+    	const latestCanvas = canvasList[canvasList.length - 1];
 
-      google.script.run
-        .withSuccessHandler(() => alert("도장이 업로드 및 삽입되었습니다."))
-        .uploadStampToDrive(dataURL);
+    	const dataURL = latestCanvas.toDataURL("image/png");
+
+    	google.script.run
+	  .withSuccessHandler(() => alert("가장 최근 도장이 업로드 및 삽입되었습니다."))
+      	  .uploadStampToDrive(dataURL);
     }
   </script>
 </body>
