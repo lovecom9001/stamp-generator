@@ -104,6 +104,7 @@
     <div class="controls">
       <input id="dateInput" type="date" />
       <button onclick="addStamp()">도장 추가</button>
+      <button onclick="uploadStamp()">업로드</button>
     </div>
     <div class="stamps-container" id="stampsList"></div>
   </div>
@@ -193,6 +194,14 @@
         a.click();
         URL.revokeObjectURL(a.href);
       }, 'image/png');
+    }
+    function uploadStamp() {
+      const canvas = document.querySelector('canvas');
+      const dataURL = canvas.toDataURL('image/png');
+
+      google.script.run.withSuccessHandler(() => {
+        alert("도장이 업로드되고 자동 삽입되었습니다.");
+      }).uploadStampToDrive(dataURL);
     }
   </script>
 </body>
